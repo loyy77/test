@@ -137,7 +137,7 @@ public class DirayDao implements IDirayDao {
 		try {
 			pstmt = DB.getCon().prepareStatement(sql);
 			pstmt.setInt(1, id);
-			return pstmt.execute();
+			return pstmt.executeUpdate()>0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

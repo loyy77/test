@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.test.dao.IDirayDao;
@@ -46,7 +47,7 @@ public class DirayServlet extends HttpServlet {
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=utf-8");
 
-		String op = "read";
+		String op = "read!!!!!!!默认！！";
 		if (request.getParameter("op") != null) {
 			op = request.getParameter("op");
 
@@ -54,8 +55,33 @@ public class DirayServlet extends HttpServlet {
 		System.out.println("op:" + op);
 		if ("create".equals(op)) {
 			this.doCreate(request, response);
-		}else if("readlist".equals(op)){
+		} else if ("readlist".equals(op)) {
 			this.doReadList(request, response);
+		} else if ("toupdate".equals(op)) {
+
+			Integer id = new Integer(request.getParameter("id"));
+			Diray d = dd.read(id);
+			// request.setAttribute("title", d.getTitle());
+			// request.setAttribute("centent", d.getCentent());
+			// request.setAttribute("id", d.getId());
+			String jsonString = new ObjectMapper().writeValueAsString(d);
+			HttpSession session = request.getSession();
+			session.setAttribute("d", d);
+			System.out.println(jsonString);
+			response.sendRedirect("diray/update.jsp");
+			// request.getRequestDispatcher("diray/update.jsp");
+			// PrintWriter out=response.getWriter();
+			// out.print("<script type='text/javascript'>location.href='update.html?id="+id+"';alert('hehe');<script>");
+			// response.setContentType("json;charset=utf-8");
+			// out.print(jsonString);
+
+			// out.print(jsonString);
+			// out.close();
+
+		} else if ("update".equals(op)) {
+			this.doUpdate(request, response);
+		} else if ("delete".equals(op)) {
+			this.doDelete(request, response);
 		}
 
 	}
@@ -68,23 +94,48 @@ public class DirayServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		if (dd.create(new Diray(title, centent))) {
-			// out.print("success");
-			response.sendRedirect("index.jsp");
+
+			// response.sendRedirect("index.jsp");
 			out.print("<script type='text/javascript'>location.href='index.jsp'<script>");
-			// request.setAttribute("res", "发表成功！");
+
 		}
 		out.close();
 	}
 
 	protected void doReadList(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("json;charset=utf-8");
 		java.util.List<Diray> list = dd.readList();
-		String string=new ObjectMapper().writeValueAsString(list);
-		PrintWriter out=response.getWriter();
-		System.out.println(string);
+		String string = new ObjectMapper().writeValueAsString(list);
+		PrintWriter out = response.getWriter();
+		System.out.println("json:" + string);
 		out.print(string);
 		out.close();
-		
+
+	}
+
+	protected void doUpdate(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		Integer id = new Integer(request.getParameter("id"));
+		String title = request.getParameter("title");
+		String centent = request.getParameter("centent");
+		if (dd.update(new Diray(id, title, centent))) {
+			PrintWriter out = response.getWriter();
+			out.print("success");
+			out.close();
+		}
+	}
+
+	protected void doDelete(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		Integer id = new Integer(request.getParameter("id"));
+		if (dd.delete(id)) {
+			response.sendRedirect("diray/dirylist.html");
+			System.out.println("删除成功");
+			PrintWriter out = response.getWriter();
+			out.print("<script type='text/javascript'>location.href='frame_right.html'<script>");
+			out.close();
+		}
 	}
 
 }
