@@ -3,12 +3,40 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>日记列表</title>
+
+<script src="../js/jquery.js"></script>
+
+
 </head>
+
 <body>
-<table>
-	<tr><td>编号</td><td>标题</td></tr>
-	
-	<tr><td>1</td><td>tile1</td></tr>
-</table>
+<div id="images"></div>
+	<table>
+		<tr>
+			<td>编号</td>
+			<td>标题</td>
+		</tr>
+
+		<tr>
+			<td>1</td>
+			<td>tile1</td>
+		</tr>
+	</table>
+	<div id="list"></div>
 </body>
 </html>
+<script>
+alert("d");
+	$.post(
+					"http://localhost:8080/test/DirayServlet",
+					{
+						op:"readlist"
+					}, function(json) {
+						alert(json);
+						$.each(json, function(i) {
+							alert(i);
+							$(#list).append(json[i].title);
+						
+						});
+					});
+</script>

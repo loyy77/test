@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.test.dao.IDirayDao;
 import org.test.dao.impl.DirayDao;
 import org.test.entity.Diray;
@@ -53,6 +54,8 @@ public class DirayServlet extends HttpServlet {
 		System.out.println("op:" + op);
 		if ("create".equals(op)) {
 			this.doCreate(request, response);
+		}else if("readlist".equals(op)){
+			this.doReadList(request, response);
 		}
 
 	}
@@ -62,15 +65,26 @@ public class DirayServlet extends HttpServlet {
 		System.out.println("in!!!!");
 		String title = request.getParameter("title");
 		String centent = request.getParameter("centent");
-		PrintWriter out=response.getWriter();
-		
+		PrintWriter out = response.getWriter();
+
 		if (dd.create(new Diray(title, centent))) {
-			//out.print("success");
+			// out.print("success");
 			response.sendRedirect("index.jsp");
 			out.print("<script type='text/javascript'>location.href='index.jsp'<script>");
-			//request.setAttribute("res", "发表成功！");
+			// request.setAttribute("res", "发表成功！");
 		}
 		out.close();
+	}
+
+	protected void doReadList(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		java.util.List<Diray> list = dd.readList();
+		String string=new ObjectMapper().writeValueAsString(list);
+		PrintWriter out=response.getWriter();
+		System.out.println(string);
+		out.print(string);
+		out.close();
+		
 	}
 
 }
