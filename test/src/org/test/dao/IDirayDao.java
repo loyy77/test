@@ -10,7 +10,7 @@ public interface IDirayDao {
 
 	public abstract Diray read(Integer id);
 
-	public abstract List<Diray> readList();
+	public abstract List<Diray> readList(Integer uid);
 
 	public abstract boolean update(Diray d);
 

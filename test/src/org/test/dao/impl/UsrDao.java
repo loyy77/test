@@ -43,14 +43,17 @@ public class UsrDao implements IUsrDao {
 	}
 
 	@Override
-	public boolean Login(Usr usr) {
+	public Integer Login(Usr usr) {
 		String sql = "select id from usr where username=? and password=?";
 		Connection con = DB.getCon();
 		try {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, usr.getUsrname());
 			pstmt.setString(2, usr.getPassword());
-			return pstmt.execute();
+			ResultSet rs= pstmt.executeQuery();
+			
+			if(rs.next())
+			return rs.getInt(1);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -63,7 +66,7 @@ public class UsrDao implements IUsrDao {
 
 		}
 
-		return false;
+		return -1;
 	}
 
 	/*

@@ -13,6 +13,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.test.dao.IDirayDao;
 import org.test.dao.impl.DirayDao;
 import org.test.entity.Diray;
+import org.test.entity.Usr;
 
 /**
  * Servlet implementation class DirayServlet
@@ -88,12 +89,13 @@ public class DirayServlet extends HttpServlet {
 
 	protected void doCreate(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("in!!!!");
+	//	System.out.println("in!!!!");
 		String title = request.getParameter("title");
 		String centent = request.getParameter("centent");
 		PrintWriter out = response.getWriter();
-
-		if (dd.create(new Diray(title, centent))) {
+		HttpSession session=request.getSession();
+		Usr usr=(Usr)session.getAttribute("usr");
+		if (dd.create(new Diray(title, centent,usr,new Diray().getPublishtime()))) {
 
 			// response.sendRedirect("index.jsp");
 			out.print("<script type='text/javascript'>location.href='index.jsp'<script>");
@@ -105,7 +107,12 @@ public class DirayServlet extends HttpServlet {
 	protected void doReadList(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("json;charset=utf-8");
-		java.util.List<Diray> list = dd.readList();
+		
+		Integer uid=0;
+		HttpSession session=request.getSession();
+		Usr usr=(Usr)session.getAttribute("usr");
+		uid=usr.getId();
+		java.util.List<Diray> list = dd.readList(uid);
 		String string = new ObjectMapper().writeValueAsString(list);
 		PrintWriter out = response.getWriter();
 		System.out.println("json:" + string);
@@ -130,7 +137,7 @@ public class DirayServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		Integer id = new Integer(request.getParameter("id"));
 		if (dd.delete(id)) {
-			response.sendRedirect("diray/dirylist.html");
+			response.sendRedirect("diray/dirylist.jsp");
 			System.out.println("É¾³ý³É¹¦");
 			PrintWriter out = response.getWriter();
 			out.print("<script type='text/javascript'>location.href='frame_right.html'<script>");

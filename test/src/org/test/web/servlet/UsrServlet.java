@@ -120,9 +120,15 @@ public class UsrServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		if (ud.Login(new Usr(username, password))) {
+		Usr usr=new Usr(username, password);
+		Integer uid=ud.Login(usr);
+		usr.setId(uid);
+		if (uid>0) {
+			HttpSession session=request.getSession();
+			session.setAttribute("usr", usr);
 			response.sendRedirect("index.jsp");
 		} else {
+			
 			response.sendRedirect("login.jsp");
 		}
 	}

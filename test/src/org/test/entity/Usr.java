@@ -17,6 +17,11 @@ public class Usr implements Serializable {
 	
 	}
 
+	public Usr(Integer id) {
+		super();
+		this.id = id;
+	}
+
 	public Usr(String usrname, String password) {
 		super();
 		this.usrname = usrname;

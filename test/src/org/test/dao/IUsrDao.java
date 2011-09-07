@@ -16,6 +16,6 @@ public interface IUsrDao {
 
 	public abstract Usr getById(Integer id);
 	
-	public abstract boolean Login(Usr usr);
+	public abstract Integer Login(Usr usr);
 
 }

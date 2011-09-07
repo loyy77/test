@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.test.dao.IDirayDao;
 import org.test.dao.impl.DirayDao;
 import org.test.entity.Diray;
+import org.test.entity.Usr;
 
 public class DirayDaoTest {
 	IDirayDao dd = new DirayDao();
@@ -21,7 +22,7 @@ public class DirayDaoTest {
 	@Test
 	public void testCreate() {
 		for (int i = 1; i < 37; i++) {
-			dd.create(new Diray("diray" + i, (new Date().toLocaleString())));
+			dd.create(new Diray("diray" + i, (new Date().toLocaleString()),new Usr(123),new Diray().getPublishtime()));
 		}
 	}
 
@@ -37,7 +38,7 @@ public class DirayDaoTest {
 
 	@Test
 	public void testReadList() {
-		Iterator<Diray> it = dd.readList().iterator();
+		Iterator<Diray> it = dd.readList(0).iterator();
 		while (it.hasNext()) {
 			System.out.println(it.next().getTitle());
 		}

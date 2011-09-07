@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -9,7 +10,7 @@
 
 </head>
 <body>
-<a href="dirylist.html" target="centent">查看日记</a>
+<a href="dirylist.jsp?uid=${usr.id}" target="centent">查看日记</a>
 	<form action="../DirayServlet" id="form1">
 		<table>
 			<tr>
@@ -36,6 +37,7 @@
 <script type="text/javascript">
 //捕获提交事件，向serevlet发送请求，以发表日记
 	$('#form1').submit(function(event){
+	
 		event.preventDefault(); 
 		
 		var $form=$(this),

@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.test.dao.IDirayDao;
 import org.test.entity.Diray;
+import org.test.entity.Usr;
 import org.test.util.DB;
 
 /**
@@ -30,13 +31,15 @@ public class DirayDao implements IDirayDao {
 	 */
 	@Override
 	public boolean create(Diray d) {
-		String sql = "insert into diray(title,centent) values(?,?)";
+		String sql = "insert into diray(title,centent,uid,publishtime) values(?,?,?,?)";
 		con = DB.getCon();
 
 		try {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, d.getTitle());
 			pstmt.setString(2, d.getCentent());
+			pstmt.setInt(3, d.getUsr().getId());
+			pstmt.setString(4, d.getPublishtime());
 			if(pstmt.executeUpdate()>0){
 				return true;
 			}
@@ -57,7 +60,7 @@ public class DirayDao implements IDirayDao {
 	@Override
 	public Diray read(Integer id) {
 
-		String sql = "select * from diray where id=?";
+		String sql = "select * from diray where id=? ";
 		con = DB.getCon();
 		ResultSet rs = null;
 		try {
@@ -82,17 +85,18 @@ public class DirayDao implements IDirayDao {
 	 * @see org.test.dao.impl.IDirayDao#readList()
 	 */
 	@Override
-	public List<Diray> readList() {
-		String sql = "select * from diray";
+	public List<Diray> readList(Integer uid) {
+		String sql = "select * from diray where uid=?";
 		con = DB.getCon();
 		List<Diray> list = new ArrayList<Diray>();
 		try {
 			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, uid);
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
 				list.add(new Diray(rs.getInt(1), rs.getString(2), rs
-						.getString(3)));
+						.getString(3),new Usr(rs.getInt(4)),rs.getString(5)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -109,14 +113,15 @@ public class DirayDao implements IDirayDao {
 	 */
 	@Override
 	public boolean update(Diray d) {
-		String sql = "update diray set title=?, centent=? where id=?";
+		String sql = "update diray set title=?, centent=?,publishtime=? where id=?";
 
 		try {
 			con = DB.getCon();
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, d.getTitle());
 			pstmt.setString(2, d.getCentent());
-			pstmt.setInt(3, d.getId());
+			pstmt.setString(3, d.getPublishtime());
+			pstmt.setInt(4, d.getId());
 			return pstmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
