@@ -5,6 +5,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>游戏帐号列表</title>
+<style type="text/css">
+	.del {
+	color: Blue;
+	display: block;
+	float: right;
+	width: 35px;
+}
+</style>
 <script src="../js/jquery.js"></script>
 
 </head>
@@ -49,12 +57,50 @@
 													+ data[i].loginpwd
 													+ "</td><td>"
 													+ data[i].mark
-													+ "</td><td align='center'><a href='#'>编辑</a> <a href='#'>删除</a>"
+													+ "</td><td align='center'><a href='../game?op=toupdate&id="+data[i].id+"'>编辑</a> <a id='del-"+data[i].id+"' class='del' href='#'>删除</a>"
 													+ "</td></tr>");
 						}
 
 					}
 
+				});
+	});
+</script>
+<script type="text/javascript">
+	$(function() {
+
+		$(".del").live(
+				'click',
+				function() {
+
+					var $p = $(this).parent().parent();
+					var $this = $(this);
+					if (!confirm("确认要删除，编号为："
+							+ $this.attr("id").replace('del-', '') + " 的日记?")) {
+						return false;
+					}
+					$.ajax({
+						type : "post",
+						url : "../game",
+						//得到id
+						data : {
+							id : $this.attr("id").replace('del-', ''),
+							op : "delete"
+						},
+						beforeSend : function() {
+							//发送请求前改变背景色
+							$p.css("backgroundColor", "#FB6C6C");
+						},
+						success : function() {
+							//删除成功
+							$p.slideUp(300, function() {
+								//移除父级div
+								$p.remove();
+							});
+						}
+					});
+					//阻止浏览器默认事件
+					return false;
 				});
 	});
 </script>

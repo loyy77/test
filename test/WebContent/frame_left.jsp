@@ -13,7 +13,7 @@
 	<ul>
 		<li><a href="diray/main.jsp" target="centent">我的日记</a></li>	
 		<li>异常收集</li>
-		<li><a href="gameaccount/create.jsp" target="centent">网游帐号</a></li>
+		<li><a href="gameaccount/create.jsp?flag=0" target="centent">网游帐号</a></li>
 	</ul>
 </body>
 </html>

@@ -58,6 +58,7 @@ public class GameAccountDao implements IGameAccountDao {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, id);
 			rs = pstmt.executeQuery();
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			List<GameAccount> list = new BeanListHandler(
 					new GameAccount().getClass()).handle(rs);
 			return list.get(0);

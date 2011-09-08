@@ -16,8 +16,6 @@ import org.test.dao.impl.GameAccountDao;
 import org.test.entity.GameAccount;
 import org.test.entity.Usr;
 
-import com.sun.corba.se.impl.orbutil.ObjectWriter;
-
 /**
  * Servlet implementation class GameAccountServlet
  */
@@ -60,7 +58,25 @@ public class GameAccountServlet extends HttpServlet {
 			this.doCreate(request, response);
 		} else if ("readlist".equals(op)) {
 			this.doReadList(request, response);
+		} else if ("delete".equals(op)) {
+			this.doDelete(request, response);
+		} else if ("toupdate".equals(op)) {
+			this.toUpdate(request, response);
+		} else if ("update".equals(op)) {
+			this.doUpdate(request, response);
 		}
+	}
+
+	private void toUpdate(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		Integer id = new Integer(request.getParameter("id"));
+		GameAccount ga = gd.read(id);
+		HttpSession session = request.getSession();
+		session.setAttribute("ga", ga);
+		
+		session.setAttribute("flag", 1);
+		response.sendRedirect("gameaccount/create.jsp");
+		
 	}
 
 	protected void doCreate(HttpServletRequest request,
@@ -89,18 +105,47 @@ public class GameAccountServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("doReadList..");
 		response.setContentType("json;charset=utf-8");
-		Integer uid=-1;
+		Integer uid = -1;
 		HttpSession session = request.getSession();
 		Usr usr = (Usr) session.getAttribute("usr");
-		if(usr!=null)
-		uid=usr.getId();
+		if (usr != null)
+			uid = usr.getId();
 		List<GameAccount> list = gd.readList(uid);
 		String result_json = new ObjectMapper().writeValueAsString(list);
 		System.out.println("json:" + result_json);
 		PrintWriter out = response.getWriter();
 		out.print(result_json);
-		
-		
 
+	}
+
+	protected void doDelete(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		Integer id = new Integer(request.getParameter("id"));
+
+		if (gd.delete(id)) {
+			System.out.println("delete..success!");
+		} else {
+			System.out.println("delete..fail");
+		}
+	}
+
+	protected void doUpdate(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		String gamename = request.getParameter("gamename");
+		String loginname = request.getParameter("loginname");
+		String loginpwd = request.getParameter("loginpwd");
+		String mark = request.getParameter("mark");
+		Integer id=new Integer(request.getParameter("id"));
+	
+		GameAccount ga = new GameAccount(null, gamename, loginname, loginpwd,
+				mark);
+		ga.setId(id);
+		if (gd.update(ga)) {
+			request.getSession().setAttribute("ga", null);
+			request.getSession().setAttribute("flag", 0);
+			System.out.println("update..success!");
+		} else {
+			System.out.println("update..fail!");
+		}
 	}
 }
