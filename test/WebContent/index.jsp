@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>在线记录系统</title>
-	<frameset cols="130px,*">
+	<frameset cols="180px,*">
 		
 			<frame src="frame_left.jsp" />
 			<frame src="frame_right.html" name="centent"/>

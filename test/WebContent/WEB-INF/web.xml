@@ -32,4 +32,14 @@
     <servlet-name>game</servlet-name>
     <url-pattern>/game</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>MyEclipseGen</display-name>
+    <servlet-name>MyEclipseGen</servlet-name>
+    <servlet-class>org.test.web.servlet.MyEclipseGenServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MyEclipseGen</servlet-name>
+    <url-pattern>/MyEclipseGen</url-pattern>
+  </servlet-mapping>
 </web-app>
